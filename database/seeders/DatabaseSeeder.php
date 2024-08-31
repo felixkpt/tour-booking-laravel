@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -12,11 +13,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\User::factory()->create([
-            'name' => 'Admin User',
-            'email' => 'admin@example.com',
-            'password' => bcrypt('Passw0rd@1234!'),
+        $this->call([
+            StatusSeeder::class,
         ]);
+
+        // \App\Models\User::factory()->create([
+        //     'name' => 'Admin User',
+        //     'email' => 'admin@example.com',
+        //     'password' => Hash::make('Passw0rd@1234!'),
+        //     'status_id' => activeStatusId()
+        // ]);
 
         $this->call([
             RolesAndPermissionsSeeder::class,

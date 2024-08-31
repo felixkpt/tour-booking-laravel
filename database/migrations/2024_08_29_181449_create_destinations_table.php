@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('destinations', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique();
             $table->string('name');
             $table->string('slug')->unique();
             $table->text('description');
             $table->foreignId('creator_id')->nullable()->constrained('users')->onDelete('set null');
-            $table->boolean('status')->default(1);
+            $table->unsignedBigInteger('status_id')->default(1);
             $table->timestamps();
         });
     }

@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique();
             $table->foreignId('creator_id')->constrained('users')->onDelete('cascade');
-            $table->string('status')->default('pending');
+            $table->unsignedBigInteger('status_id')->default(1);
             $table->timestamps();
         });
     }

@@ -40,3 +40,5 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/tickets', [TicketController::class, 'index']); // View all tickets
     });
 });
+
+require 'api-auth.php';

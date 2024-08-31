@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique();
             $table->foreignId('booking_id')->constrained()->onDelete('cascade');
             $table->string('ticket_number')->unique();
             $table->foreignId('creator_id')->nullable()->constrained('users')->onDelete('set null');
-            $table->boolean('status')->default(1);
+            $table->unsignedBigInteger('status_id')->default(1);
             $table->timestamps();
         });
     }
