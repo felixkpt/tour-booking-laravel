@@ -7,12 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Tour extends Model
 {
-    use HasFactory;
+    use HasFactory, CommonModelRelationShips;
 
-    protected $fillable = ['uuid', 'destination_id', 'name', 'description', 'price', 'slots', 'creator_id', 'status_id'];
+    protected $fillable = ['uuid', 'destination_id', 'name', 'description', 'featured_image', 'price', 'slots', 'creator_id', 'status_id'];
 
-    public function imageSlides()
+    public function destination()
     {
-        return $this->hasMany(ImageSlide::class);
+        return $this->hasMany(TourDestination::class);
+    }
+
+    public function getFullNameAttribute()
+    {
+        return $this->name . ' (' . $this->destination->name . ')';
     }
 }

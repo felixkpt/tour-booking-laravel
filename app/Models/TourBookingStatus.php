@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class TourBookingStatus extends Model
 {
-    use HasFactory;
+    use HasFactory, CommonModelRelationShips;
 }

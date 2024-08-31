@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('destinations', function (Blueprint $table) {
+        Schema::create('tour_destinations', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
-            $table->string('name');
+            $table->string('name')->unique();
             $table->string('slug')->unique();
             $table->text('description');
+            $table->string('featured_image')->nullable();
             $table->foreignId('creator_id')->nullable()->constrained('users')->onDelete('set null');
             $table->unsignedBigInteger('status_id')->default(1);
             $table->timestamps();
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('destinations');
+        Schema::dropIfExists('tour_destinations');
     }
 };

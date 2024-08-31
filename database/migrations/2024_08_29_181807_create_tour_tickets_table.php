@@ -11,15 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('booking_statuses', function (Blueprint $table) {
+        Schema::create('tour_tickets', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
-            $table->string('name')->unique();
-            $table->string('slug')->nullable()->unique();
-            $table->text('description');
-            $table->string('icon')->nullable();
-            $table->string('class')->nullable();
+            $table->foreignId('tour_booking_id')->constrained()->onDelete('cascade');
+            $table->string('ticket_number')->unique();
             $table->foreignId('creator_id')->nullable()->constrained('users')->onDelete('set null');
+            $table->unsignedBigInteger('status_id')->default(1);
             $table->timestamps();
         });
     }
@@ -29,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('booking_statuses');
+        Schema::dropIfExists('tour_tickets');
     }
 };

@@ -5,22 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TourBooking extends Model
+class TourTicket extends Model
 {
     use HasFactory, CommonModelRelationShips;
 
     protected $fillable = [
         'uuid',
-        'user_id',
-        'tour_id',
+        'tour_booking_id',
+        'ticket_number',
         'creator_id',
         'status_id',
     ];
 
     // Define relationships
-    public function user()
+    public function tourBooking()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(TourBooking::class);
     }
 
     public function creator()
@@ -30,11 +30,6 @@ class TourBooking extends Model
 
     public function status()
     {
-        return $this->belongsTo(TourBookingStatus::class, 'status_id');
-    }
-
-    public function tour()
-    {
-        return $this->belongsTo(Tour::class, 'tour_id');
+        return $this->belongsTo(TourTicketStatus::class, 'status_id');
     }
 }

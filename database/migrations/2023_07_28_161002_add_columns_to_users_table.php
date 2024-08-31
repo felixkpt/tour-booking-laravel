@@ -9,7 +9,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->unsignedBigInteger('phone')->nullable();
+            $table->string('phone')->nullable();
             $table->string('avatar')->nullable();
             $table->dateTime('last_login_date')->nullable();
             $table->unsignedBigInteger('default_role_id')->default(0);

@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('tour_bookings', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('tour_id')->constrained()->onDelete('cascade');
             $table->foreignId('creator_id')->constrained('users')->onDelete('cascade');
             $table->unsignedBigInteger('status_id')->default(1);
             $table->timestamps();

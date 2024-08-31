@@ -5,24 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TourBooking extends Model
+class TourDestination extends Model
 {
     use HasFactory, CommonModelRelationShips;
 
+    // Fillable attributes for mass assignment
     protected $fillable = [
         'uuid',
-        'user_id',
-        'tour_id',
+        'name',
+        'slug',
+        'description',
+        'featured_image',
         'creator_id',
         'status_id',
     ];
 
     // Define relationships
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
-
     public function creator()
     {
         return $this->belongsTo(User::class, 'creator_id');
@@ -30,11 +28,11 @@ class TourBooking extends Model
 
     public function status()
     {
-        return $this->belongsTo(TourBookingStatus::class, 'status_id');
+        return $this->belongsTo(Status::class, 'status_id');
     }
 
-    public function tour()
+    public function tours()
     {
-        return $this->belongsTo(Tour::class, 'tour_id');
+        return $this->hasMany(Tour::class);
     }
 }
