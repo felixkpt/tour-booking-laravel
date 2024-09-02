@@ -51,13 +51,13 @@ class TourRepository implements TourRepositoryInterface
 
     public function show($id)
     {
-        $tour = $this->model::findOrFail($id)->with([
+        $tour = $this->model::with([
             'destination' => function ($query) {
                 $query->with('imageSlides');
             },
             'creator',
             'status'
-        ])->first();
+        ])->findOrFail($id);
 
         return response(['results' => $tour]);
     }

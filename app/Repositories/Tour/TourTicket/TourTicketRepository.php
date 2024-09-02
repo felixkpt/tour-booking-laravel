@@ -54,6 +54,7 @@ class TourTicketRepository implements TourTicketRepositoryInterface
             'creator',
             'status'
         ]))->findOrFail($id);
+        
         return response(['results' => $tour]);
     }
 }

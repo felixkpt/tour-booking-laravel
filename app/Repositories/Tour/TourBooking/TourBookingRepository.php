@@ -75,7 +75,15 @@ class TourBookingRepository implements TourBookingRepositoryInterface
 
     public function show($id)
     {
-        $tour = $this->model::findOrFail($id);
+        $tour = $this->model::with(([
+            'user',
+            'tour',
+            'status',
+            'ticket',
+            'creator',
+            'status'
+        ]))->findOrFail($id);
+        
         return response(['results' => $tour]);
     }
 }
