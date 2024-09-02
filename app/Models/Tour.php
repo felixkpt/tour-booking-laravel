@@ -24,7 +24,7 @@ class Tour extends Model
 
     public function destination()
     {
-        return $this->hasMany(TourDestination::class);
+        return $this->belongsTo(TourDestination::class, 'tour_destination_id');
     }
 
     public function getFullNameAttribute()

@@ -1,38 +1,55 @@
 <?php
-// routes/auth.php
 
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\Auth\EmailVerificationNotificationController;
-use App\Http\Controllers\Auth\NewPasswordController;
-use App\Http\Controllers\Auth\PasswordResetLinkController;
-use App\Http\Controllers\Auth\RegisteredUserController;
-use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Dashboard\Settings\RolePermissions\Roles\RolesController;
+use App\Http\Controllers\Dashboard\Settings\RolePermissions\Roles\View\RoleController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/register', [RegisteredUserController::class, 'store'])
-                ->middleware('guest')
-                ->name('register');
+// Authentication routes
+Route::prefix('auth')->group(function () {
 
-Route::post('/login', [AuthenticatedSessionController::class, 'store'])
-                ->middleware('guest')
-                ->name('login');
+    $controller = AuthController::class;
 
-Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
-                ->middleware('guest')
-                ->name('password.email');
+    // Register and Login routes
+    Route::post('register', [$controller, 'register']);
+    Route::post('login', [$controller, 'login']);
 
-Route::post('/reset-password', [NewPasswordController::class, 'store'])
-                ->middleware('guest')
-                ->name('password.store');
+    // Password-related routes
+    Route::prefix('password')->group(function () use ($controller) {
+        Route::post('send-reset-link', [$controller, 'passwordResetLink']);
+        Route::get('{token}', [$controller, 'getEmail'])->name('getEmail');
+        Route::post('set', [$controller, 'passwordSet'])->name('password.set');
+    });
 
-Route::get('/verify-email/{id}/{hash}', VerifyEmailController::class)
-                ->middleware(['auth', 'signed', 'throttle:6,1'])
-                ->name('verification.verify');
+    Route::middleware(['auth:sanctum'])->group(function () use ($controller) {
 
-Route::post('/email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
-                ->middleware(['auth', 'throttle:6,1'])
-                ->name('verification.send');
+        $controller = AuthController::class;
 
-Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
-                ->middleware('auth')
-                ->name('logout');
+        // Authenticated user routes
+        Route::get('/get-user', function (Request $request) {
+            $user = $request->user();
+            // Generate and assign an API token
+            if ($user) {
+                $user->token = $user->createToken("API TOKEN")->plainTextToken;
+            }
+            return ['results' => $user];
+        });
+
+        Route::patch('update-profile', [$controller, 'profileUpdate']);
+        Route::patch('update-password', [$controller, 'updatePassword']);
+        Route::get('login-logs', [$controller, 'loginLogs']);
+        Route::post('logout', [$controller, 'logout']);
+    });
+
+    // User role and permission routes
+    Route::prefix('roles')->group(function () use ($controller) {
+        $controller = RolesController::class;
+        Route::get('/get-user-roles-and-permissions', [$controller, 'getUserRolesAndPermissions']);
+        Route::get('/get-user-roles', [$controller, 'getUserRoles']);
+
+        $controller = RoleController::class;
+        Route::get('/view/{id}/get-role-route-permissions', [$controller, 'getRoleRoutePermissions']);
+        Route::get('/view/{id}/get-role-menu', [$controller, 'getRoleMenu']);
+    });
+});
