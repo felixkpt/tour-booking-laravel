@@ -24,7 +24,7 @@ $prefix = config('nestedroutes.prefix') ?? 'api';
 $middleWares = config('nestedroutes.middleWares');
 $middleWares = $middleWares && count($middleWares) > 0 ? $middleWares : 'api';
 
-Route::middleware([])
+Route::middleware('auth:sanctum')
     ->prefix($prefix)
     ->group(function () use ($nested_routes_folder) {
 
