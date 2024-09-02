@@ -120,21 +120,29 @@ class TourSeeder extends Seeder
             // Select a random destination for each tour
             $destination = $destinations->random();
 
+
             // Generate 1 to 3 paragraphs and wrap each in <p> tags
             $extraParagraphs = implode('', array_map(fn($p) => "<p>$p</p>", $faker->paragraphs(rand(1, 3))));
             $extendedDescription = '<p>' . $tourData['description'] . '</p>' . $extraParagraphs;
 
+            $name = $tourData['name'] . ' (' . $destination->name . ')';
             // Create a tour with the randomly selected destination
-            Tour::create([
-                'tour_destination_id' => $destination->id,
-                'name' => $tourData['name'] . ' (' . $destination->name . ')',
-                'description' => $extendedDescription,
-                'price' => $faker->randomFloat(2, 50, 300),
-                'slots' => $faker->numberBetween(0, 200),
-                'creator_id' => $creator_id,
-                'status_id' => activeStatusId(),
-                'featured_image' => $faker->imageUrl(640, 480, 'tour', true),
-            ]);
+            Tour::updateOrCreate(
+                [
+                    'name' => $name,
+                ],
+                [
+                    'name' => $name,
+                    'tour_destination_id' => $destination->id,
+                    'name' => $tourData['name'] . ' (' . $destination->name . ')',
+                    'description' => $extendedDescription,
+                    'price' => $faker->randomFloat(2, 50, 300),
+                    'slots' => $faker->randomNumber(2),
+                    'creator_id' => $creator_id,
+                    'status_id' => activeStatusId(),
+                    'featured_image' => $faker->imageUrl(640, 480, 'tour', true),
+                ]
+            );
         }
     }
 }
