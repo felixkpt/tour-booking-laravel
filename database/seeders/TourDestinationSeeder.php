@@ -57,7 +57,7 @@ class TourDestinationSeeder extends Seeder
             );
 
             // Create image slides for the created destination with a 70% chance
-            if (rand(1, 100) >= 70) {
+            if (rand(1, 100) >= 30) {
                 for ($j = 1; $j <= rand(1, 10); $j++) {
                     TourDestinationImageSlide::create([
                         'tour_destination_id' => $destination->id,
