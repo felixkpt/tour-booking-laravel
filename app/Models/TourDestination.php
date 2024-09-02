@@ -11,7 +11,6 @@ class TourDestination extends Model
 
     // Fillable attributes for mass assignment
     protected $fillable = [
-        'uuid',
         'name',
         'slug',
         'description',
@@ -29,6 +28,11 @@ class TourDestination extends Model
     public function status()
     {
         return $this->belongsTo(Status::class, 'status_id');
+    }
+
+    public function imageSlides()
+    {
+        return $this->hasMany(TourDestinationImageSlide::class, 'tour_destination_id');
     }
 
     public function tours()

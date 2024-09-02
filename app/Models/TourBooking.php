@@ -34,8 +34,8 @@ class TourBooking extends Model
         return $this->belongsTo(TourBookingStatus::class, 'status_id');
     }
 
-    public function tour()
+    public function ticket()
     {
-        return $this->belongsTo(Tour::class, 'tour_id');
+        return $this->belongsTo(TourTicket::class, 'tour_id');
     }
 }

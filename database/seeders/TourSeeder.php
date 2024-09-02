@@ -96,6 +96,17 @@ class TourSeeder extends Seeder
             ['name' => 'Artisan Craft Tour', 'description' => 'Explore local artisan crafts and handmade goods.'],
             ['name' => 'River Kayaking', 'description' => 'Kayak down scenic rivers and waterways.'],
             ['name' => 'Rock Concert', 'description' => 'Attend a thrilling rock music concert.'],
+            ['name' => 'Artisan Craft Workshop', 'description' => 'Learn traditional crafts from local artisans.'],
+            ['name' => 'Wildlife Photography', 'description' => 'Capture stunning wildlife moments in their natural habitat.'],
+            ['name' => 'Nighttime City Tour', 'description' => 'Experience the city’s nightlife with guided tours.'],
+            ['name' => 'Scenic Train Ride', 'description' => 'Enjoy breathtaking views on a scenic train journey.'],
+            ['name' => 'Hot Air Balloon Ride', 'description' => 'Soar above the landscape in a hot air balloon.'],
+            ['name' => 'Fishing Expedition', 'description' => 'Join a local fishing trip and learn the art of fishing.'],
+            ['name' => 'Photography Tour', 'description' => 'Discover the best spots for photography with a local guide.'],
+            ['name' => 'Kayaking Adventure', 'description' => 'Explore rivers and lakes while kayaking through nature.'],
+            ['name' => 'Horseback Riding', 'description' => 'Enjoy a leisurely ride through picturesque landscapes.'],
+            ['name' => 'Local Market Tour', 'description' => 'Visit vibrant local markets and taste fresh produce.'],
+
         ];
 
         // Fetch all available destinations
@@ -126,6 +137,7 @@ class TourSeeder extends Seeder
             $extendedDescription = '<p>' . $tourData['description'] . '</p>' . $extraParagraphs;
 
             $name = $tourData['name'] . ' (' . $destination->name . ')';
+
             // Create a tour with the randomly selected destination
             Tour::updateOrCreate(
                 [
@@ -137,7 +149,7 @@ class TourSeeder extends Seeder
                     'name' => $tourData['name'] . ' (' . $destination->name . ')',
                     'description' => $extendedDescription,
                     'price' => $faker->randomFloat(2, 50, 300),
-                    'slots' => $faker->randomNumber(2),
+                    'slots' => $faker->numberBetween(0, 200),
                     'creator_id' => $creator_id,
                     'status_id' => activeStatusId(),
                     'featured_image' => $faker->imageUrl(640, 480, 'tour', true),

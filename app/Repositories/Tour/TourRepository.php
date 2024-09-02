@@ -16,7 +16,13 @@ class TourRepository implements TourRepositoryInterface
     public function index()
     {
 
-        $tours = $this->model::query()->with((['destination', 'creator', 'status']));
+        $tours = $this->model::query()->with([
+            'destination' => function ($query) {
+                $query->with('imageSlides');
+            },
+            'creator',
+            'status'
+        ]);
 
         if (request()->all == '1')
             return response(['results' => $tours->get()]);
@@ -45,7 +51,14 @@ class TourRepository implements TourRepositoryInterface
 
     public function show($id)
     {
-        $tour = $this->model::findOrFail($id);
+        $tour = $this->model::findOrFail($id)->with([
+            'destination' => function ($query) {
+                $query->with('imageSlides');
+            },
+            'creator',
+            'status'
+        ])->first();
+
         return response(['results' => $tour]);
     }
 }

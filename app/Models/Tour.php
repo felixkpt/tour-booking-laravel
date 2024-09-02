@@ -9,7 +9,7 @@ class Tour extends Model
 {
     use HasFactory, CommonModelRelationShips, ExcludeSystemFillable;
 
-    protected $fillable = ['uuid', 'name', 'destination_id', 'description', 'featured_image', 'price', 'slots', 'creator_id', 'status_id'];
+    protected $fillable = ['uuid', 'name', 'tour_destination_id', 'description', 'featured_image', 'price', 'slots', 'creator_id', 'status_id'];
 
     // Define relationships
     public function creator()
