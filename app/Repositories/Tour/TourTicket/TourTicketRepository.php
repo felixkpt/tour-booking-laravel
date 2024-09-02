@@ -11,14 +11,16 @@ class TourTicketRepository implements TourTicketRepositoryInterface
 {
     use CommonRepoActions;
 
-    function __construct(protected TourTicket $model)
-    {
-    }
+    function __construct(protected TourTicket $model) {}
 
     public function index()
     {
 
-        $tours = $this->model::query();
+        $tours = $this->model::query()->with(([
+            'tourBooking' => fn($q) => $q->with('tour'),
+            'creator',
+            'status'
+        ]));
 
         if (request()->all == '1')
             return response(['results' => $tours->get()]);
@@ -27,7 +29,7 @@ class TourTicketRepository implements TourTicketRepositoryInterface
         $tours = SearchRepo::of($tours, ['id', 'name'])
             ->setModelUri($uri)
             ->addColumn('Created_by', 'getUser')
-            ->addFillable('tour_booking_id', ['input' => 'dropdown', 'type' => null, 'dropdownSource'=> '/api/admin/tours/bookings'], 'roles_multiplelist')
+            ->addFillable('tour_booking_id', ['input' => 'dropdown', 'type' => null, 'dropdownSource' => '/api/admin/tours/bookings'], 'roles_multiplelist')
             ->paginate();
 
         return response(['results' => $tours]);
@@ -47,7 +49,11 @@ class TourTicketRepository implements TourTicketRepositoryInterface
 
     public function show($id)
     {
-        $tour = $this->model::findOrFail($id);
+        $tour = $this->model::with(([
+            'tourBooking' => fn($q) => $q->with('tour'),
+            'creator',
+            'status'
+        ]))->findOrFail($id);
         return response(['results' => $tour]);
     }
 }

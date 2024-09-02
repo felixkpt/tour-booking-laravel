@@ -20,7 +20,7 @@ class TourTicket extends Model
     // Define relationships
     public function tourBooking()
     {
-        return $this->belongsTo(TourBooking::class);
+        return $this->belongsTo(TourBooking::class, 'tour_booking_id');
     }
 
     public function creator()

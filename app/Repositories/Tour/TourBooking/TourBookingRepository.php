@@ -18,7 +18,14 @@ class TourBookingRepository implements TourBookingRepositoryInterface
     public function index()
     {
 
-        $tours = $this->model::query()->with((['tour', 'status', 'ticket']));
+        $tours = $this->model::query()->with(([
+            'user',
+            'tour',
+            'status',
+            'ticket',
+            'creator',
+            'status'
+        ]));
 
         if (request()->all == '1')
             return response(['results' => $tours->get()]);
