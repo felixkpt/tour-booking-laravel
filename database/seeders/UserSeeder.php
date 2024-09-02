@@ -21,6 +21,19 @@ class UserSeeder extends Seeder
         $adminRole = Role::where(['name' => 'admin'])->first();
         $userRole = Role::where(['name' => 'user'])->first();
 
+        \App\Models\User::factory()->create([
+            'name' => 'Admin User',
+            'email' => 'admin@example.com',
+            'password' => Hash::make('Passw0rd@1234!'),
+            'status_id' => activeStatusId()
+        ]);
+
+        // Find the Admin User and assign the 'admin' role
+        $user = User::where('email', 'admin@example.com')->first();
+        if ($user) {
+            $user->syncRoles([$adminRole]);
+        }
+
         $counts = 20;
         // Create users
         for ($i = 0; $i <= $counts; $i++) {

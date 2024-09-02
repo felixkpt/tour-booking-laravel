@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TourTicket extends Model
 {
-    use HasFactory, CommonModelRelationShips;
+    use HasFactory, CommonModelRelationShips, ExcludeSystemFillable;
 
     protected $fillable = [
         'uuid',

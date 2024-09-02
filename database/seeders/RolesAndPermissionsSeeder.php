@@ -6,6 +6,7 @@ use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class RolesAndPermissionsSeeder extends Seeder
 {
@@ -48,10 +49,5 @@ class RolesAndPermissionsSeeder extends Seeder
         $adminRole->syncPermissions([$createTours, $viewBookings]);
         $userRole->syncPermissions([$bookTours]);
 
-        // Find the Admin User and assign the 'admin' role
-        $user = User::where('email', 'admin@example.com')->first();
-        if ($user) {
-            $user->syncRoles([$adminRole]);
-        }
     }
 }

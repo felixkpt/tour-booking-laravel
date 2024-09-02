@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Services\Filerepo\Controllers\FilesController;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
@@ -30,6 +31,15 @@ trait CommonRepoActions
             $data['priority'] = $highestPriority + 1;
         }
 
+        // remove base64
+        $data = array_filter($data, function ($itm) {
+            if (is_array($itm) || !isBase46($itm)) {
+                return true;
+            }
+        });
+
+        Log::info('DDD', $data);
+
         $record = $this->model::updateOrCreate(['id' => $id], $data);
 
         $this->saveModelFiles($record);
@@ -40,9 +50,26 @@ trait CommonRepoActions
     function saveModelFiles($record)
     {
         try {
-            // Iterate through all the files in the request
+            // Handle base64 encoded images
+            foreach (request()->all() as $field => $value) {
+                if (isBase46($value)) {
+                    Log::info('Detected base64 image:', [$record->getTable(), $field]);
+
+                    if (Schema::hasColumn($record->getTable(), $field)) {
+                        $uploader = new FilesController();
+                        $file_path = $uploader->saveBase64Image($value, $field);
+
+                        if ($file_path) {
+                            $record->$field = $file_path;
+                            $record->save();
+                        }
+                    }
+                }
+            }
+
+            // Handle traditional file uploads
             foreach (request()->allFiles() as $field => $files) {
-                Log::info('Fil:', [$record->getTable(), $field, Schema::hasColumn($record->getTable(), $field),]);
+                Log::info('File upload:', [$record->getTable(), $field, Schema::hasColumn($record->getTable(), $field)]);
 
                 if (Schema::hasColumn($record->getTable(), $field)) {
                     $uploader = new FilesController();
@@ -103,7 +130,7 @@ trait CommonRepoActions
 
     function destroy($id)
     {
-        $this->model::find($id)->delete();
+        $this->model::findOrFail($id)->delete();
         return response(['message' => "Record deleted successfully."]);
     }
 }

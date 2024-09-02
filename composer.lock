@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fdb7b9fc3a21725d9a81b9a9c7e966ed",
+    "content-hash": "7473b5c73570ec7df8fc85aa3d0ffa45",
     "packages": [
         {
             "name": "brick/math",
@@ -505,6 +505,55 @@
                 }
             ],
             "time": "2023-10-06T06:47:41+00:00"
+        },
+        {
+            "name": "felixkpt/nestedroutes",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/felixkpt/nested-routes.git",
+                "reference": "013194074b3c44852b162868305b0ae2a1449b99"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/felixkpt/nested-routes/zipball/013194074b3c44852b162868305b0ae2a1449b99",
+                "reference": "013194074b3c44852b162868305b0ae2a1449b99",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.0",
+                "spatie/laravel-permission": ">=5.10"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Felixkpt\\Nestedroutes\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Felix Biwott",
+                    "email": "felixkpt@gmail.com"
+                }
+            ],
+            "description": "A package for handling nested routes in PHP applications. This package provides a flexible and intuitive way to define and manage nested routes, with support for role-based permissions.",
+            "keywords": [
+                "nested",
+                "permissions",
+                "php",
+                "roles",
+                "routing"
+            ],
+            "support": {
+                "issues": "https://github.com/felixkpt/nested-routes/issues",
+                "source": "https://github.com/felixkpt/nested-routes/tree/main"
+            },
+            "time": "2024-05-27T11:40:45+00:00"
         },
         {
             "name": "fruitcake/php-cors",
@@ -8274,7 +8323,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "felixkpt/nestedroutes": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

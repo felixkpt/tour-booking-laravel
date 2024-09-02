@@ -4,6 +4,7 @@ namespace App\Repositories\SearchRepo;
 
 use App\Models\Status;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 trait SearchRepoTrait
@@ -69,7 +70,8 @@ trait SearchRepoTrait
 
         $arr = [
             'fillable' => $this->getFillable($fillable),
-            'model_name' => $this->model_name, 'model_name_plural' => Str::plural($this->model_name),
+            'model_name' => $this->model_name,
+            'model_name_plural' => Str::plural($this->model_name),
             'module_uri' => $this->moduleUri,
             'statuses' => $statuses,
             'htmls' => $this->htmls,
@@ -82,7 +84,7 @@ trait SearchRepoTrait
     {
         $fillable = is_array($fillable) ? $fillable : [];
 
-        $fillable = array_filter($fillable, fn ($item) => !in_array($item, $this->removedFillable));
+        $fillable = array_filter($fillable, fn($item) => !in_array($item, $this->removedFillable));
 
         $addedFillable = $this->addedFillable;
 
@@ -133,7 +135,7 @@ trait SearchRepoTrait
     function getFillable(array $fillable)
     {
         $guess_array = [
-            'name' => ['input' => 'input', 'type' => 'name'],
+            'name' => ['input' => 'input', 'type' => 'text'],
             'email' => ['input' => 'input', 'type' => 'email'],
             'password' => ['input' => 'input', 'type' => 'password'],
             'password_confirmation' => ['input' => 'input', 'type' => 'password'],
@@ -144,12 +146,13 @@ trait SearchRepoTrait
 
             'text' => ['input' => 'input', 'type' => 'url'],
 
-            '*_id'  => ['input' => 'select', 'type' => null],
-            '*_ids'  => ['input' => 'select', 'type' => 'multi'],
-            '*_list'  => ['input' => 'select', 'type' => 'multi'],
-            '*_multilist'  => ['input' => 'select', 'type' => 'multi'],
-            'guard_name' => ['input' => 'select', 'type' => null],
+            '*_id'  => ['input' => 'dropdown', 'type' => null, 'dropdownSource' => null],
+            '*_ids'  => ['input' => 'dropdown', 'type' => 'multiple', 'dropdownSource' => null],
+            '*_list'  => ['input' => 'dropdown', 'type' => 'multiple', 'dropdownSource' => null],
+            '*_multiplelist'  => ['input' => 'dropdown', 'type' => 'multiple', 'dropdownSource' => null],
+            'guard_name' => ['input' => 'dropdown', 'type' => null],
 
+            '*_image' => ['input' => 'input', 'type' => 'file', 'accept' => 'image/*'],
             'img' => ['input' => 'input', 'type' => 'file', 'accept' => 'image/*'],
             'image' => ['input' => 'input', 'type' => 'file', 'accept' => 'image/*'],
             'emblem' => ['input' => 'input', 'type' => 'file', 'accept' => 'image/*'],
@@ -178,17 +181,27 @@ trait SearchRepoTrait
         foreach ($fillable as $field) {
             $matchedType = null;
 
-            foreach ($guess_array as $pattern => $type) {
-                if (fnmatch($pattern, $field)) {
-                    $matchedType = $type;
+            foreach ($guess_array as $pattern => $inputType) {
+                if ($pattern == $field) {
+                    $matchedType = $inputType;
                     break;
+                }
+            }
+
+            // guess by pattern if not matched yet
+            if (!$matchedType) {
+                foreach ($guess_array as $pattern => $inputType) {
+                    if (fnmatch($pattern, $field)) {
+                        $matchedType = $inputType;
+                        break;
+                    }
                 }
             }
 
             if ($matchedType) {
                 $guessed[$field]['input'] = $matchedType['input'];
                 // Assign other properties if available
-                foreach (['type', 'min', 'max', 'rows', 'accept'] as $property) {
+                foreach (['type', 'min', 'max', 'rows', 'accept', 'dropdownSource'] as $property) {
                     if (isset($matchedType[$property])) {
                         $guessed[$field][$property] = $matchedType[$property];
                     }
@@ -220,7 +233,7 @@ trait SearchRepoTrait
     {
         if ($before !== null) {
             // Find the index of the item to insert before
-            $index = array_search(strtolower($before), array_map(fn ($item) => strtolower($item), array_column($this->actionItems, 'title')));
+            $index = array_search(strtolower($before), array_map(fn($item) => strtolower($item), array_column($this->actionItems, 'title')));
 
             if ($index !== false) {
                 // Insert the new item before the specified item

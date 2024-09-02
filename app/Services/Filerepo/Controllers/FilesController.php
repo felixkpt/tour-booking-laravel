@@ -18,9 +18,7 @@ class FilesController extends Controller
     protected $files_folder;
     protected $delete_url = "admin/file-repo/tmp/delete";
 
-    function __construct()
-    {
-    }
+    function __construct() {}
 
     public function uploadFolder(Request $request)
     {
@@ -66,9 +64,9 @@ class FilesController extends Controller
             if ($file->isFile()) {
                 $filePath = $file->getRealPath();
                 $relativePath = substr($filePath, strlen($directory) + 1);
-                
+
                 $path = 'assets/' . $relativePath;
-        
+
                 if (!Str::startsWith($path, config('app.gcs_project_folder'))) {
                     $path = config('app.gcs_project_folder') . '/' . $path;
                     // Remove repeated slashes
@@ -222,6 +220,39 @@ class FilesController extends Controller
         }
 
         return response()->json(['error' => 'File not found.'], 404);
+    }
+
+    public function saveBase64Image($value, $field)
+    {
+
+        try {
+            // Extract the base64 string
+            $base64String = $value;
+
+            // Check if base64 string contains 'data:image/...' and remove it
+            if (strpos($base64String, 'data:image/') === 0) {
+                $base64String = preg_replace('#^data:image/\w+;base64,#i', '', $base64String);
+            }
+
+            // Decode the base64 string
+            $imageData = base64_decode($base64String);
+
+            // Generate a unique filename with extension
+            $fileName = Str::random(10) . '.png';
+
+            // Define the file path
+            $folder = $this->getFolder(null);
+            $path = $folder . '/' . $fileName;
+
+            // Save the file
+            Storage::disk(env('FILESYSTEM_DRIVER', 'local'))->put($path, $imageData);
+            Storage::disk(env('FILESYSTEM_DRIVER', 'local'))->setVisibility($path, 'public');
+
+            // Return the file path
+            return response()->json(['path' => Storage::disk(env('FILESYSTEM_DRIVER', 'local'))->url($path)], 201);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     /**

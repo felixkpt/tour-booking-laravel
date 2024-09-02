@@ -14,9 +14,9 @@ class UserValidation implements UserValidationInterface
         $rules = [
             'name' => 'required',
             'email' => 'required|unique:users,email,' . $request->id,
-            'phone' => 'nullable|min:4|max:10|unique:users,phone,' . $request->id,
+            'phone' => 'nullable|min:4|max:20|unique:users,phone,' . $request->id,
             'roles_list' => 'required|array|min:1|max:10',
-            'direct_permissions_list' => 'nullable|array',
+            'permissions_list' => 'nullable|array',
         ];
 
         if (!$request->id) {

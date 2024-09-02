@@ -37,7 +37,7 @@ class RoleRepository implements RoleRepositoryInterface
         if (request()->all == '1')
             return response(['results' => $roles->get()]);
 
-        $uri =  '/dashboard/settings/role-permissions/roles/';
+        $uri =  '/admin/settings/role-permissions/roles/';
         $roles = SearchRepo::of($roles, ['name', 'id'])
             ->setModelUri($uri)
             ->fillable(['name', 'guard_name'])

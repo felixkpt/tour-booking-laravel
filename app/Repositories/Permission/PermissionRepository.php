@@ -27,9 +27,9 @@ class PermissionRepository implements PermissionRepositoryInterface
     public function index()
     {
 
-        $permissions = $this->model::whereNull('uri');
+        $permissions = $this->model::query();
 
-        $uri = '/dashboard/settings/role-permissions/permissions/';
+        $uri = '/admin/settings/role-permissions/permissions/';
         $permissions = SearchRepo::of($permissions, ['name', 'id'])
             ->setModelUri($uri)
             ->addColumn('Created_by', 'getUser')

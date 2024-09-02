@@ -28,7 +28,7 @@ class UserRepository implements UserRepositoryInterface
     public function index($id = null)
     {
 
-        $users = $this->model::with(['roles'])
+        $users = $this->model::with(['roles', 'permissions'])
             ->when(request()->status == 1, fn($q) => $q->where('status_id', activeStatusId()))
             ->when($id, fn($q) => $q->where('id', $id))
             ->when(request()->role_id, function ($q) {
@@ -45,7 +45,7 @@ class UserRepository implements UserRepositoryInterface
 
         if ($this->applyFiltersOnly) return $users;
 
-        $uri = '/dashboard/settings/users/';
+        $uri = '/admin/settings/users/';
 
         $users = SearchRepo::of($users, ['name', 'id'])
             ->setModelUri($uri)
@@ -54,8 +54,8 @@ class UserRepository implements UserRepositoryInterface
                 return implode(', ', $user->roles()->get()->pluck('name')->toArray());
             })
             ->addFillable('password_confirmation', [], 'avatar')
-            ->addFillable('roles_multilist', ['input' => 'input', 'type' => 'checkbox'], 'two_factor_enabled')
-            ->addFillable('direct_permissions_multilist', ['input' => 'input', 'type' => 'checkbox'], 'roles_multilist')
+            ->addFillable('roles_list', ['input' => 'dropdown', 'type' => 'multiple', 'dropdownSource'=> '/admin/settings/role-permissions/roles'], 'two_factor_enabled')
+            ->addFillable('permissions_list', ['input' => 'dropdown', 'type' => 'multiple', 'dropdownSource'=> '/admin/settings/role-permissions/permissions'], 'roles_multiplelist')
             ->addFillable('two_factor_enabled', ['input' => 'input', 'type' => 'checkbox'], 'theme')
             ->addFillable('allowed_session_no', ['input' => 'input', 'type' => 'number', 'min' => 1, 'max' => 10], 'theme');
 
@@ -338,8 +338,8 @@ class UserRepository implements UserRepositoryInterface
             $user->syncRoles($roles);
         }
 
-        if ($request->direct_permissions_list) {
-            $permissions = Permission::whereIn('id', $request->direct_permissions_list)->get();
+        if ($request->permissions_list) {
+            $permissions = Permission::whereIn('id', $request->permissions_list)->get();
             $user->syncPermissions($permissions);
         }
 

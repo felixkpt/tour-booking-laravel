@@ -31,15 +31,33 @@ class TourBookingSeeder extends Seeder
 
         // Loop through each tour and create bookings
         foreach ($tours as $tour) {
+            $maxSlots = $tour->slots; // Assuming you have a 'slots' column in the Tour model
+
             // Create a number of bookings for each tour
             for ($i = 0; $i < 4; $i++) {
+                // Generate a random number of slots between 1 and the maximum available slots
+                $slots = rand(1, $maxSlots);
+
+                // Create a booking entry
                 TourBooking::create([
                     'user_id' => $users->random()->id,
                     'tour_id' => $tour->id,
+                    'slots' => $slots,
                     'creator_id' => $users->random()->id,
                     'status_id' => $statuses->random()->id,
                 ]);
+
+                // Decrement the available slots for the tour
+                $maxSlots -= $slots;
+
+                // Break if no more slots are available
+                if ($maxSlots <= 0) {
+                    break;
+                }
             }
+
+            // Update the tour with the remaining slots
+            $tour->update(['slots' => $maxSlots]);
         }
     }
 }

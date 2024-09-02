@@ -12,7 +12,10 @@ if (!function_exists('defaultColumns')) {
     {
 
         if (Schema::hasColumn($model->getTable(), 'user_id') && !$model->user_id)
-            $model->user_id = auth()->id() ?? 0;
+            $model->user_id = auth()->id() ?? null;
+
+        if (Schema::hasColumn($model->getTable(), 'creator_id') && !$model->creator_id)
+            $model->creator_id = auth()->id() ?? null;
 
         if (Schema::hasColumn($model->getTable(), 'status_id') && !$model->status_id)
             $model->status_id = activeStatusId();
@@ -117,5 +120,20 @@ if (!function_exists('sanctum_auth')) {
                 auth()->login($accessToken->tokenable);
             }
         }
+    }
+}
+
+if (!function_exists('isBase46')) {
+    function isBase46($item)
+    {
+       if (is_string($item) && Str::contains($item, 'data:image')) return true;
+       return false;
+    }
+}
+
+if (!function_exists('generateTicketNumber')) {
+    function generateTicketNumber()
+    {
+      return 'TKT-'.Str::random(6);
     }
 }

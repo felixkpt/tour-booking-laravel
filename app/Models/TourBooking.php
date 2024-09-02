@@ -7,12 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class TourBooking extends Model
 {
-    use HasFactory, CommonModelRelationShips;
+    use HasFactory, CommonModelRelationShips, ExcludeSystemFillable;
 
     protected $fillable = [
         'uuid',
         'user_id',
         'tour_id',
+        'slots',
         'creator_id',
         'status_id',
     ];

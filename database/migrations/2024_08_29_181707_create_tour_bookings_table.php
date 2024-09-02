@@ -16,6 +16,7 @@ return new class extends Migration
             $table->uuid('uuid')->unique();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('tour_id')->constrained()->onDelete('cascade');
+            $table->integer('slots');
             $table->foreignId('creator_id')->constrained('users')->onDelete('cascade');
             $table->unsignedBigInteger('status_id')->default(1);
             $table->timestamps();

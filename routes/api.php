@@ -1,8 +1,10 @@
 <?php
 
-use App\Http\Controllers\BookingController;
-use App\Http\Controllers\TicketController;
-use App\Http\Controllers\TourController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Tours\TourBookingController;
+use App\Http\Controllers\Tours\TourDestinationController;
+use App\Http\Controllers\Tours\ToursController;
+use App\Http\Controllers\Tours\TourTicketController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,29 +18,53 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Routes requiring sanctum auth
 Route::middleware('auth:sanctum')->group(function () {
 
     // Routes accessible to authenticated users (both admin and regular users)
-    Route::get('/tours', [TourController::class, 'index']); // View available tours
+    Route::prefix('tours')->group(function () {
+        Route::get('/', [ToursController::class, 'index']); // View available tours
+        Route::get('/view/{id}', [ToursController::class, 'show']); // View a specific tour
 
-    Route::group(['middleware' => ['role:user', 'role:admin']], function () {
-        // Routes accessible only to users and admins
-        Route::post('/bookings', [BookingController::class, 'store']); // Book a tour
-        Route::get('/bookings/{id}', [BookingController::class, 'show']); // View a specific booking
-        Route::post('/tickets', [TicketController::class, 'store']); // Generate a ticket
-        Route::get('/tickets/{id}', [TicketController::class, 'show']); // View a specific ticket
+        Route::get('/destinations', [TourDestinationController::class, 'index']); // View all tour destinations
+        Route::get('/destinations/{id}', [TourDestinationController::class, 'show']); // View a specific destination
+
+
+        Route::get('/bookings', [TourBookingController::class, 'getSelf']); // View all bookings
+        Route::post('/bookings', [TourBookingController::class, 'store']); // Book a tour
+        Route::get('/bookings/{id}', [TourBookingController::class, 'show']); // View a specific booking
+
     });
 
-    Route::group(['middleware' => ['role:admin']], function () {
-        // Routes accessible only to admins
-        Route::post('/tours', [TourController::class, 'store']); // Create a new tour
-        Route::put('/tours/{id}', [TourController::class, 'update']); // Update a tour
-        Route::delete('/tours/{id}', [TourController::class, 'destroy']); // Delete a tour
+    Route::group(['prefix' => 'admin', 'middleware' => ['role:admin']], function () {
+        // Routes accessible only to admins with 'admin' prefix
+        Route::get('/stats', [AdminController::class, 'stats']);
 
-        Route::get('/bookings', [BookingController::class, 'index']); // View all bookings
-        Route::get('/tickets', [TicketController::class, 'index']); // View all tickets
+        Route::get('/destinations', [TourDestinationController::class, 'index']); // list tour destination
+        Route::post('/destinations', [TourDestinationController::class, 'store']); // Create a new tour destination
+        Route::put('/destinations/view/{id}', [TourDestinationController::class, 'update']); // Update a destination
+        Route::patch('/destinations/view/{id}', [TourDestinationController::class, 'updateStatus']); // Updatestatus a tour ticket
+        Route::delete('/destinations/{id}', [TourDestinationController::class, 'destroy']); // Delete a destination
+
+        Route::prefix('tours')->group(function () {
+            Route::get('/', [ToursController::class, 'index']); // list tours
+            Route::post('/', [ToursController::class, 'store']); // Create a new tour
+            Route::put('/view/{id}', [ToursController::class, 'update']); // Update a tour
+            Route::patch('/view/{id}', [ToursController::class, 'updateStatus']); // Updatestatus a tour ticket
+            Route::delete('/view/{id}', [ToursController::class, 'destroy']); // Delete a tour
+
+            Route::get('/tickets', [TourTicketController::class, 'index']); // View all tour tickets
+            Route::post('/tickets', [TourTicketController::class, 'store']); // Create a new tour ticket
+            Route::put('/tickets/view/{id}', [TourTicketController::class, 'update']); // Update a tour ticket
+            Route::patch('/tickets/view/{id}', [TourTicketController::class, 'updateStatus']); // Updatestatus a tour ticket
+            Route::delete('/tickets/view/{id}', [TourTicketController::class, 'destroy']); // Delete a tour ticket
+
+            Route::get('/bookings', [TourBookingController::class, 'index']); // View all bookings
+            Route::put('/bookings/view/{id}', [TourBookingController::class, 'update']); // Update a tour book
+            Route::patch('/bookings/view/{id}', [TourBookingController::class, 'updateStatus']); // Updatestatus a tour book
+            Route::delete('/bookings/view/{id}', [TourBookingController::class, 'destroy']); // Delete a tour book
+        });
     });
 });
 
-require 'api-auth.php';
+// Include authentication routes
+require 'auth.php';

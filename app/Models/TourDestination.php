@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TourDestination extends Model
 {
-    use HasFactory, CommonModelRelationShips;
+    use HasFactory, CommonModelRelationShips, ExcludeSystemFillable;
 
     // Fillable attributes for mass assignment
     protected $fillable = [

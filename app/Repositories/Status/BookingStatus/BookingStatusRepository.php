@@ -23,7 +23,7 @@ class BookingStatusRepository implements BookingStatusRepositoryInterface
         if (request()->all == '1')
             return response(['results' => $statuses->get()]);
 
-        $uri = '/dashboard/settings/picklists/statuses/booking-statuses/';
+        $uri = '/admin/settings/picklists/statuses/booking-statuses/';
         $statuses = SearchRepo::of($statuses, ['id', 'name'])
             ->setModelUri($uri)
             ->addColumn('Created_by', 'getUser')

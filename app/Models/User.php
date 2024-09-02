@@ -12,7 +12,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, HasPermissions;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, HasPermissions, ExcludeSystemFillable;
 
     /**
      * The attributes that are mass assignable.
@@ -29,6 +29,26 @@ class User extends Authenticatable
         'default_role_id',
         'creator_id',
         'status_id',
+    ];
+
+    protected $systemFillable = [
+        'status_id',
+        'first_name',
+        'middle_name',
+        'last_name',
+        'two_factor_valid',
+        'last_login_date',
+        'two_factor_expires_at',
+        'two_factor_code',
+        'email_verified_at',
+        'api_token',
+        'session_id',
+        'is_session_valid',
+        'is_online',
+        'remember_token',
+        'theme',
+        'default_role_id',
+        'creator_id',
     ];
 
     /**
