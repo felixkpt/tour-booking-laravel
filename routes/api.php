@@ -18,24 +18,23 @@ use Illuminate\Support\Facades\Route;
 |
 */
 // Routes accessible to authenticated users (both admin and regular users)
-Route::prefix('tours')->group(function () {
-    Route::get('/', [ToursController::class, 'index']); // View available tours
-    Route::get('/view/{id}', [ToursController::class, 'show']); // View a specific tour
-
-    Route::get('/destinations', [TourDestinationController::class, 'index']); // View all tour destinations
-    Route::get('/destinations/{id}', [TourDestinationController::class, 'show']); // View a specific destination
-
-
-    Route::get('/bookings', [TourBookingController::class, 'getSelf']); // View all bookings
-    Route::post('/bookings', [TourBookingController::class, 'store']); // Book a tour
-    Route::get('/bookings/{id}', [TourBookingController::class, 'show']); // View a specific booking
-
-});
 
 
 Route::middleware('auth:sanctum')->group(function () {
 
-    
+    Route::prefix('tours')->group(function () {
+        Route::get('/', [ToursController::class, 'index']); // View available tours
+        Route::get('/view/{id}', [ToursController::class, 'show']); // View a specific tour
+
+        Route::get('/destinations', [TourDestinationController::class, 'index']); // View all tour destinations
+        Route::get('/destinations/{id}', [TourDestinationController::class, 'show']); // View a specific destination
+
+        Route::get('/bookings', [TourBookingController::class, 'getSelf']); // View all bookings
+        Route::post('/bookings', [TourBookingController::class, 'store']); // Book a tour
+        Route::get('/bookings/{id}', [TourBookingController::class, 'show']); // View a specific booking
+
+    });
+
     Route::group(['prefix' => 'admin', 'middleware' => ['role:admin']], function () {
         // Routes accessible only to admins with 'admin' prefix
         Route::get('/stats', [AdminController::class, 'stats']);
