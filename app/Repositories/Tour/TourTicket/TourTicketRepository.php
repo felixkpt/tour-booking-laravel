@@ -40,6 +40,10 @@ class TourTicketRepository implements TourTicketRepositoryInterface
     public function store(Request $request, $data)
     {
 
+        if (!isset($data['ticket_number'])) {
+            $data['ticket_number'] = generateTicketNumber();
+        }
+
         $res = $this->autoSave($data);
 
         $action = 'created';

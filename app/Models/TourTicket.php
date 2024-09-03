@@ -17,6 +17,8 @@ class TourTicket extends Model
         'status_id',
     ];
 
+    protected $systemFillable = ['ticket_number'];
+
     // Define relationships
     public function tourBooking()
     {
