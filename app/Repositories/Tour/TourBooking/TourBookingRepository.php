@@ -4,6 +4,7 @@ namespace App\Repositories\Tour\TourBooking;
 
 use App\Models\Tour;
 use App\Models\TourBooking;
+use App\Models\TourBookingStatus;
 use App\Models\TourTicket;
 use App\Repositories\CommonRepoActions;
 use App\Repositories\SearchRepo\SearchRepo;
@@ -32,6 +33,7 @@ class TourBookingRepository implements TourBookingRepositoryInterface
 
         $uri = '/admin/tours/bookings';
         $tours = SearchRepo::of($tours, ['id', 'name'])
+            ->statuses(TourBookingStatus::all()->toArray())
             ->setModelUri($uri)
             ->addColumn('Created_by', 'getUser')
             ->addFillable('user_id', ['input' => 'dropdown', 'type' => null, 'dropdownSource' => '/api/admin/settings/users'], 'tour_id')
