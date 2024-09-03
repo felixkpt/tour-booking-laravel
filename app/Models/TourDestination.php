@@ -19,6 +19,8 @@ class TourDestination extends Model
         'status_id',
     ];
 
+    protected $systemFillable = ['slug'];
+
     // Define relationships
     public function creator()
     {

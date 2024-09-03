@@ -49,6 +49,8 @@ COPY . /app
 
 COPY gcp/docker/.env_sandbox /app/.env
 
+COPY gcp/docker/gcs-storage-service-account.json /app/gcs-storage-service-account.json
+
 RUN cd /app && composer update --ignore-platform-req=ext-oci8 && composer install --ignore-platform-req=ext-oci8 --no-dev && php artisan optimize:clear && php artisan storage:link
 
 RUN chown -R www-data: /app
