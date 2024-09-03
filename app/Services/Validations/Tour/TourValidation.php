@@ -13,7 +13,7 @@ class TourValidation implements TourValidationInterface
             [
                 'name' => 'required|string|unique:tours,name,' . $request->id . ',id',
                 'description' => 'required|string',
-                'destination_id' => 'required|integer|exists:tour_destinations,id',
+                'tour_destination_id' => 'required|integer|exists:tour_destinations,id',
                 'featured_image' => 'nullable|string',
                 'price' => 'required|numeric',
                 'slots' => 'required|integer|min:1',

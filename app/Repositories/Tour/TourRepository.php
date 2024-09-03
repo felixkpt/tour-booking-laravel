@@ -31,7 +31,7 @@ class TourRepository implements TourRepositoryInterface
         $tours = SearchRepo::of($tours, ['id', 'name'])
             ->setModelUri($uri)
             ->addColumn('Created_by', 'getUser')
-            ->addFillable('destination_id', ['input' => 'dropdown', 'type' => null, 'dropdownSource' => '/api/admin/destinations'], 'roles_multiplelist')
+            ->addFillable('tour_destination_id', ['input' => 'dropdown', 'type' => null, 'dropdownSource' => '/api/admin/destinations'], 'roles_multiplelist')
             ->paginate();
 
         return response(['results' => $tours]);
