@@ -29,10 +29,6 @@ Route::prefix('auth')->group(function () {
         // Authenticated user routes
         Route::get('/get-user', function (Request $request) {
             $user = $request->user();
-            // Generate and assign an API token
-            if ($user) {
-                $user->token = $user->createToken("API TOKEN")->plainTextToken;
-            }
             return ['results' => $user];
         });
 

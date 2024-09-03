@@ -168,6 +168,8 @@ class TourSeeder extends Seeder
 
             $name = $tourData['name'] . ' (' . $destination->name . ')';
 
+            $slots = rand(0, 20) == 0 ? 0 : $faker->numberBetween(10, 200);
+
             // Create a tour with the randomly selected destination
             Tour::updateOrCreate(
                 [
@@ -179,7 +181,7 @@ class TourSeeder extends Seeder
                     'name' => $tourData['name'] . ' (' . $destination->name . ')',
                     'description' => $extendedDescription,
                     'price' => $faker->randomFloat(2, 50, 300),
-                    'slots' => $faker->numberBetween(0, 200),
+                    'slots' => $slots,
                     'creator_id' => $creator_id,
                     'status_id' => activeStatusId(),
                     'featured_image' => $faker->imageUrl(640, 480, 'tour', true),
