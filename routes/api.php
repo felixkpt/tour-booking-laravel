@@ -59,6 +59,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::delete('/tickets/view/{id}', [TourTicketController::class, 'destroy']); // Delete a tour ticket
 
             Route::get('/bookings', [TourBookingController::class, 'index']); // View all bookings
+            Route::post('/bookings', [TourBookingController::class, 'store']); // Book a tour for user
             Route::put('/bookings/view/{id}', [TourBookingController::class, 'update']); // Update a tour book
             Route::patch('/bookings/view/{id}', [TourBookingController::class, 'updateStatus']); // Updatestatus a tour book
             Route::delete('/bookings/view/{id}', [TourBookingController::class, 'destroy']); // Delete a tour book

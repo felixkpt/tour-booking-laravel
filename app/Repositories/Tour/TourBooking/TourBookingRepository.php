@@ -34,6 +34,7 @@ class TourBookingRepository implements TourBookingRepositoryInterface
         $tours = SearchRepo::of($tours, ['id', 'name'])
             ->setModelUri($uri)
             ->addColumn('Created_by', 'getUser')
+            ->addFillable('user_id', ['input' => 'dropdown', 'type' => null, 'dropdownSource' => '/api/admin/settings/users'], 'tour_id')
             ->addFillable('tour_id', ['input' => 'dropdown', 'type' => null, 'dropdownSource' => '/api/admin/tours'], 'roles_multiplelist')
             ->addFillable('destination_id', ['input' => 'dropdown', 'type' => null, 'dropdownSource' => '/api/admin/destinations'], 'roles_multiplelist')
             ->paginate();
@@ -83,7 +84,7 @@ class TourBookingRepository implements TourBookingRepositoryInterface
             'creator',
             'status'
         ]))->findOrFail($id);
-        
+
         return response(['results' => $tour]);
     }
 }
