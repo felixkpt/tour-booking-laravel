@@ -3,6 +3,7 @@
 namespace App\Repositories\Tour\TourTicket;
 
 use App\Models\TourTicket;
+use App\Models\TourTicketStatus;
 use App\Repositories\CommonRepoActions;
 use App\Repositories\SearchRepo\SearchRepo;
 use Illuminate\Http\Request;
@@ -27,6 +28,7 @@ class TourTicketRepository implements TourTicketRepositoryInterface
 
         $uri = '/admin/tours/tickets';
         $tours = SearchRepo::of($tours, ['id', 'name'])
+            ->statuses(TourTicketStatus::all()->toArray())
             ->setModelUri($uri)
             ->addColumn('Created_by', 'getUser')
             ->addFillable('tour_booking_id', ['input' => 'dropdown', 'type' => null, 'dropdownSource' => '/api/admin/tours/bookings'], 'roles_multiplelist')
@@ -54,7 +56,7 @@ class TourTicketRepository implements TourTicketRepositoryInterface
             'creator',
             'status'
         ]))->findOrFail($id);
-        
+
         return response(['results' => $tour]);
     }
 }
