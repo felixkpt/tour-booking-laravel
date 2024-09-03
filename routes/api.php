@@ -49,7 +49,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/', [ToursController::class, 'index']); // list tours
             Route::post('/', [ToursController::class, 'store']); // Create a new tour
             Route::put('/view/{id}', [ToursController::class, 'update']); // Update a tour
-            Route::patch('/view/{id}', [ToursController::class, 'updateStatus']); // Updatestatus a tour ticket
+            Route::patch('/view/{id}/update-status', [ToursController::class, 'updateStatus']); // Updatestatus a tour ticket
             Route::delete('/view/{id}', [ToursController::class, 'destroy']); // Delete a tour
 
             Route::get('/tickets', [TourTicketController::class, 'index']); // View all tour tickets
