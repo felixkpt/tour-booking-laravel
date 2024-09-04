@@ -8,7 +8,10 @@ use App\Models\TourBookingStatus;
 use App\Models\TourTicket;
 use App\Repositories\CommonRepoActions;
 use App\Repositories\SearchRepo\SearchRepo;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class TourBookingRepository implements TourBookingRepositoryInterface
 {
@@ -32,7 +35,7 @@ class TourBookingRepository implements TourBookingRepositoryInterface
             return response(['results' => $tours->get()]);
 
         $uri = '/admin/tours/bookings';
-        $tours = SearchRepo::of($tours, ['id', 'name'])
+        $tours = SearchRepo::of($tours, ['id', 'name', 'tour.name', 'user.name'])
             ->statuses(TourBookingStatus::all()->toArray())
             ->setModelUri($uri)
             ->addColumn('Created_by', 'getUser')
@@ -88,5 +91,33 @@ class TourBookingRepository implements TourBookingRepositoryInterface
         ]))->findOrFail($id);
 
         return response(['results' => $tour]);
+    }
+
+    function updateStatus($id)
+    {
+        request()->validate(['status_id' => 'required']);
+
+        $status_id = request()->status_id;
+        $model = $this->model::findorFail($id);
+
+        // if Confirmed | Confirmed and cancel request prevent
+        if (in_array($model->status->name, ['Confirmed', 'Confirmed'])) {
+            abort(422, 'The tour can no longer be canceled.');
+        }
+
+        try {
+            DB::beginTransaction();
+            $model->update(['status_id' => $status_id]);
+            // if request is cancel increment the tour slots by the number of current booking
+            if ($model->status->name === 'Cancelled') {
+                $model->tour->update(['slots' => $model->tour->slots + $model->slots]);
+            }
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::info('Tour booking status update failure:' . $e->getMessage());
+        }
+
+        return response(['message' => "Status updated successfully."]);
     }
 }
