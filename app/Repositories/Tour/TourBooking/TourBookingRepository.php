@@ -105,6 +105,11 @@ class TourBookingRepository implements TourBookingRepositoryInterface
             abort(422, 'The tour can no longer be canceled.');
         }
 
+        // if Completed cancel request prevent
+        if (in_array($model->status->name, ['Completed'])) {
+            abort(422, 'Completed tour status can no longer be changed.');
+        }
+
         try {
             DB::beginTransaction();
             $model->update(['status_id' => $status_id]);
