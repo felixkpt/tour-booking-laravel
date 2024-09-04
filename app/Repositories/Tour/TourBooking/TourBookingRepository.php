@@ -100,25 +100,27 @@ class TourBookingRepository implements TourBookingRepositoryInterface
         $status_id = request()->status_id;
         $model = $this->model::findorFail($id);
 
-        // if Completed cancel request prevent
-        if (in_array($model->status->name, ['Completed', 'Cancelled'])) {
-            abort(422, 'Tour status can no longer be updated.');
-        }
+        $newStatus = TourBookingStatus::find($status_id);
 
-        // if Confirmed | Confirmed and cancel request prevent
-        if (in_array($model->status->name, ['Confirmed', 'Confirmed'])) {
-            abort(422, 'The tour can no longer be canceled.');
+        // if Cancelled || Completed no more updating of status
+        if ($model->status->name == 'Cancelled' || $model->status->name == 'Completed') {
+            abort(422, 'The tour can no longer be updated.');
+        } else {
+
+            // if Confirmed and allow marking as completed
+            if ($model->status->name == 'Confirmed' && !in_array($newStatus->name, ['Confirmed', 'Completed'])) {
+                abort(422, 'The tour can only be updated as completed.');
+            }
         }
 
         try {
             DB::beginTransaction();
-            $newStatus = TourBookingStatus::find($status_id);
 
             // if request is cancel increment the tour slots by the number of current booking
             if ($newStatus->name == 'Cancelled') {
                 $model->tour->update(['slots' => $model->tour->slots + $model->slots]);
             }
-        
+
             $model->update(['status_id' => $status_id]);
             DB::commit();
         } catch (Exception $e) {
