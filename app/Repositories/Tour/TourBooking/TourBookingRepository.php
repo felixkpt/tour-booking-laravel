@@ -100,14 +100,14 @@ class TourBookingRepository implements TourBookingRepositoryInterface
         $status_id = request()->status_id;
         $model = $this->model::findorFail($id);
 
+        // if Completed cancel request prevent
+        if (in_array($model->status->name, ['Completed', 'Cancelled'])) {
+            abort(422, 'Tour status can no longer be updated.');
+        }
+
         // if Confirmed | Confirmed and cancel request prevent
         if (in_array($model->status->name, ['Confirmed', 'Confirmed'])) {
             abort(422, 'The tour can no longer be canceled.');
-        }
-
-        // if Completed cancel request prevent
-        if (in_array($model->status->name, ['Completed'])) {
-            abort(422, 'Completed tour status can no longer be changed.');
         }
 
         try {
