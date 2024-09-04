@@ -112,11 +112,14 @@ class TourBookingRepository implements TourBookingRepositoryInterface
 
         try {
             DB::beginTransaction();
-            $model->update(['status_id' => $status_id]);
+            $newStatus = TourBookingStatus::find($status_id);
+
             // if request is cancel increment the tour slots by the number of current booking
-            if ($model->status->name === 'Cancelled') {
+            if ($newStatus->name == 'Cancelled') {
                 $model->tour->update(['slots' => $model->tour->slots + $model->slots]);
             }
+        
+            $model->update(['status_id' => $status_id]);
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
