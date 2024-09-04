@@ -153,7 +153,7 @@ class TourSeeder extends Seeder
 
         foreach ($toursData as $tourData) {
             $creator_id = null;
-            $random = rand(1, 4);
+            $random = mt_rand(1, 4);
             if ($random <= 3) {
                 // 75% chance
                 $creator_id = $users->random()->id;
@@ -168,7 +168,7 @@ class TourSeeder extends Seeder
 
             $name = $tourData['name'] . ' (' . $destination->name . ')';
 
-            $slots = rand(0, 20) == 0 ? rand(0, 20) : $faker->numberBetween(10, 200);
+            $slots = mt_rand(0, 20) == 0 ? mt_rand(0, 20) : $faker->numberBetween(10, 200);
 
             // Create a tour with the randomly selected destination
             Tour::updateOrCreate(
