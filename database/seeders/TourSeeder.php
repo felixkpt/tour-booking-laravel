@@ -168,7 +168,7 @@ class TourSeeder extends Seeder
 
             $name = $tourData['name'] . ' (' . $destination->name . ')';
 
-            $slots = rand(0, 20) == 0 ? 0 : $faker->numberBetween(10, 200);
+            $slots = rand(0, 20) == 0 ? rand(0, 20) : $faker->numberBetween(10, 200);
 
             // Create a tour with the randomly selected destination
             Tour::updateOrCreate(
