@@ -14,7 +14,7 @@ class TourDestinationValidation implements TourDestinationValidationInterface
             'name' => [
                 'required',
                 'string',
-                Rule::unique('tours', 'name')->ignore($request->id, 'id')
+                // Rule::unique('tour_destinations', 'name')->ignore($request->id, 'id')
             ],
             'description' => 'required|string',
             'featured_image' => 'nullable|string',

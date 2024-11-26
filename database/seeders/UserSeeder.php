@@ -34,7 +34,7 @@ class UserSeeder extends Seeder
             $user->syncRoles([$adminRole]);
         }
 
-        $counts = 20;
+        $counts = 100;
         // Create users
         for ($i = 0; $i <= $counts; $i++) {
             // Determine role assignment based on weighted percentages

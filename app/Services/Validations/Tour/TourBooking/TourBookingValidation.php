@@ -20,9 +20,9 @@ class TourBookingValidation implements TourBookingValidationInterface
                 'min:1',
                 function ($attribute, $value, $fail) use ($request) {
                     $tour = Tour::find($request->tour_id);
-                    
+
                     if ($tour && $value > $tour->slots) {
-                        $fail('The number of slots exceeds the available slots for this tour.');
+                        $fail("The number of slots exceeds the available slots for this tour. Maximum slots available: {$tour->slots}.");
                     }
                 }
             ],

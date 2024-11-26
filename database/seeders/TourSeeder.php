@@ -96,6 +96,47 @@ class TourSeeder extends Seeder
             ['name' => 'Artisan Craft Tour', 'description' => 'Explore local artisan crafts and handmade goods.'],
             ['name' => 'River Kayaking', 'description' => 'Kayak down scenic rivers and waterways.'],
             ['name' => 'Rock Concert', 'description' => 'Attend a thrilling rock music concert.'],
+            ['name' => 'Artisan Craft Workshop', 'description' => 'Learn traditional crafts from local artisans.'],
+            ['name' => 'Wildlife Photography', 'description' => 'Capture stunning wildlife moments in their natural habitat.'],
+            ['name' => 'Nighttime City Tour', 'description' => 'Experience the city’s nightlife with guided tours.'],
+            ['name' => 'Scenic Train Ride', 'description' => 'Enjoy breathtaking views on a scenic train journey.'],
+            ['name' => 'Hot Air Balloon Ride', 'description' => 'Soar above the landscape in a hot air balloon.'],
+            ['name' => 'Fishing Expedition', 'description' => 'Join a local fishing trip and learn the art of fishing.'],
+            ['name' => 'Photography Tour', 'description' => 'Discover the best spots for photography with a local guide.'],
+            ['name' => 'Kayaking Adventure', 'description' => 'Explore rivers and lakes while kayaking through nature.'],
+            ['name' => 'Horseback Riding', 'description' => 'Enjoy a leisurely ride through picturesque landscapes.'],
+            ['name' => 'Local Market Tour', 'description' => 'Visit vibrant local markets and taste fresh produce.'],
+            ['name' => 'Astronomy Tour', 'description' => 'Observe the night sky with guided astronomy tours.'],
+            ['name' => 'Whale Watching', 'description' => 'Witness the majestic sight of whales in their natural habitat.'],
+            ['name' => 'Sunset Cruise', 'description' => 'Enjoy a beautiful sunset from a boat.'],
+            ['name' => 'Tango Dance Class', 'description' => 'Learn to dance the tango with professional instructors.'],
+            ['name' => 'Street Food Tour', 'description' => 'Taste a variety of street foods from local vendors.'],
+            ['name' => 'Meditation Retreat', 'description' => 'Relax and rejuvenate with guided meditation sessions.'],
+            ['name' => 'Brewery Tour', 'description' => 'Visit local breweries and sample craft beers.'],
+            ['name' => 'Wine Harvesting', 'description' => 'Participate in a wine harvest and learn about winemaking.'],
+            ['name' => 'Artisan Craft Tour', 'description' => 'Explore local artisan crafts and handmade goods.'],
+            ['name' => 'River Kayaking', 'description' => 'Kayak down scenic rivers and waterways.'],
+            ['name' => 'Rock Concert', 'description' => 'Attend a thrilling rock music concert.'],
+            ['name' => 'Artisan Craft Workshop', 'description' => 'Learn traditional crafts from local artisans.'],
+            ['name' => 'Wildlife Photography', 'description' => 'Capture stunning wildlife moments in their natural habitat.'],
+            ['name' => 'Nighttime City Tour', 'description' => 'Experience the city’s nightlife with guided tours.'],
+            ['name' => 'Scenic Train Ride', 'description' => 'Enjoy breathtaking views on a scenic train journey.'],
+            ['name' => 'Hot Air Balloon Ride', 'description' => 'Soar above the landscape in a hot air balloon.'],
+            ['name' => 'Historical Walking Tour', 'description' => 'Explore the rich history of the city with guided historical tours.'],
+            ['name' => 'Culinary Cooking Class', 'description' => 'Master new recipes and cooking techniques with expert chefs.'],
+            ['name' => 'Mountain Biking Adventure', 'description' => 'Tackle challenging trails and enjoy breathtaking mountain views.'],
+            ['name' => 'Zip Line Experience', 'description' => 'Glide through the treetops and experience an exhilarating zip line ride.'],
+            ['name' => 'Sailing Lesson', 'description' => 'Learn the basics of sailing and navigate the open waters.'],
+            ['name' => 'Photography Workshop', 'description' => 'Enhance your photography skills with professional guidance and hands-on practice.'],
+            ['name' => 'Horseback Riding Excursion', 'description' => 'Enjoy a scenic ride on horseback through picturesque landscapes.'],
+            ['name' => 'Cooking with Local Ingredients', 'description' => 'Create delicious dishes using fresh, local ingredients with a local chef.'],
+            ['name' => 'Astronomy Workshop', 'description' => 'Delve into the universe with hands-on astronomy activities and stargazing.'],
+            ['name' => 'Surfing Lesson', 'description' => 'Catch waves and learn to surf with expert instructors.'],
+            ['name' => 'Pottery Making Class', 'description' => 'Discover the art of pottery and create your own unique pieces.'],
+            ['name' => 'Bird Watching Tour', 'description' => 'Observe and learn about various bird species in their natural habitats.'],
+            ['name' => 'Craft Beer Tasting', 'description' => 'Sample a variety of craft beers and learn about the brewing process.'],
+            ['name' => 'Guided Nature Hike', 'description' => 'Explore natural trails and learn about local flora and fauna with a guide.'],
+            ['name' => 'Dance Fitness Class', 'description' => 'Get active and have fun with a dance-based fitness class.']
         ];
 
         // Fetch all available destinations
@@ -112,7 +153,7 @@ class TourSeeder extends Seeder
 
         foreach ($toursData as $tourData) {
             $creator_id = null;
-            $random = rand(1, 4);
+            $random = mt_rand(1, 4);
             if ($random <= 3) {
                 // 75% chance
                 $creator_id = $users->random()->id;
@@ -120,17 +161,32 @@ class TourSeeder extends Seeder
             // Select a random destination for each tour
             $destination = $destinations->random();
 
+
+            // Generate 1 to 3 paragraphs and wrap each in <p> tags
+            $extraParagraphs = implode('', array_map(fn($p) => "<p>$p</p>", $faker->paragraphs(rand(1, 3))));
+            $extendedDescription = '<p>' . $tourData['description'] . '</p>' . $extraParagraphs;
+
+            $name = $tourData['name'] . ' (' . $destination->name . ')';
+
+            $slots = mt_rand(0, 20) == 0 ? mt_rand(0, 20) : $faker->numberBetween(10, 200);
+
             // Create a tour with the randomly selected destination
-            Tour::create([
-                'tour_destination_id' => $destination->id,
-                'name' => $tourData['name'] . ' (' . $destination->name . ')',
-                'description' => $tourData['description'],
-                'price' => $faker->randomFloat(2, 50, 300),
-                'slots' => $faker->randomNumber(2),
-                'creator_id' => $creator_id,
-                'status_id' => activeStatusId(),
-                'featured_image' => $faker->imageUrl(640, 480, 'tour', true),
-            ]);
+            Tour::updateOrCreate(
+                [
+                    'name' => $name,
+                ],
+                [
+                    'name' => $name,
+                    'tour_destination_id' => $destination->id,
+                    'name' => $tourData['name'] . ' (' . $destination->name . ')',
+                    'description' => $extendedDescription,
+                    'price' => $faker->randomFloat(2, 50, 300),
+                    'slots' => $slots,
+                    'creator_id' => $creator_id,
+                    'status_id' => activeStatusId(),
+                    'featured_image' => $faker->imageUrl(640, 480, 'tour', true),
+                ]
+            );
         }
     }
 }

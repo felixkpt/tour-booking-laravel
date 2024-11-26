@@ -17,10 +17,12 @@ class TourTicket extends Model
         'status_id',
     ];
 
+    protected $systemFillable = ['ticket_number'];
+
     // Define relationships
     public function tourBooking()
     {
-        return $this->belongsTo(TourBooking::class);
+        return $this->belongsTo(TourBooking::class, 'tour_booking_id');
     }
 
     public function creator()

@@ -249,9 +249,9 @@ class FilesController extends Controller
             Storage::disk(env('FILESYSTEM_DRIVER', 'local'))->setVisibility($path, 'public');
 
             // Return the file path
-            return response()->json(['path' => Storage::disk(env('FILESYSTEM_DRIVER', 'local'))->url($path)], 201);
+            return ['path' => Storage::disk(env('FILESYSTEM_DRIVER', 'local'))->url($path)];
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return ['error' => $e->getMessage()];
         }
     }
 

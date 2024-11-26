@@ -38,4 +38,9 @@ class TourBooking extends Model
     {
         return $this->belongsTo(Tour::class, 'tour_id');
     }
+
+    public function ticket()
+    {
+        return $this->belongsTo(TourTicket::class, 'tour_id');
+    }
 }

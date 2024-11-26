@@ -38,8 +38,6 @@ trait CommonRepoActions
             }
         });
 
-        Log::info('DDD', $data);
-
         $record = $this->model::updateOrCreate(['id' => $id], $data);
 
         $this->saveModelFiles($record);
@@ -59,9 +57,11 @@ trait CommonRepoActions
                         $uploader = new FilesController();
                         $file_path = $uploader->saveBase64Image($value, $field);
 
-                        if ($file_path) {
-                            $record->$field = $file_path;
+                        if (isset($file_path['path'])) {
+                            $record->$field = $file_path['path'];
                             $record->save();
+                        } else {
+                            Log::info('Error uploading:', [$file_path]);
                         }
                     }
                 }
