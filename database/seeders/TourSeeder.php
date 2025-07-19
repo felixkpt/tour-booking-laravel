@@ -184,7 +184,6 @@ class TourSeeder extends Seeder
                     'slots' => $slots,
                     'creator_id' => $creator_id,
                     'status_id' => activeStatusId(),
-                    'featured_image' => $faker->imageUrl(640, 480, 'tour', true),
                 ]
             );
         }

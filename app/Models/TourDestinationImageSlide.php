@@ -15,4 +15,19 @@ class TourDestinationImageSlide extends Model
     {
         return $this->belongsTo(TourDestination::class);
     }
+
+    // Accessor to modify the image_path when accessed
+    public function getImagePathAttribute($value)
+    {
+        if (empty($value)) {
+            return null;
+        }
+
+        // Check if the path already starts with http:// or https://
+        if (!preg_match('/^https?:\/\//', $value)) {
+            return 'http://localhost:8000/assets/' . ltrim($value, '/');
+        }
+
+        return $value;
+    }
 }

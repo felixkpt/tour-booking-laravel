@@ -30,4 +30,11 @@ class TourDestinationController extends Controller
 
         return $this->repo->store($request, $data);
     }
+
+    public function storeFromJson(Request $request)
+    {
+        $data = $this->repoValidation->storeFromJson($request);
+
+        return $this->repo->storeFromJson($request, $data);
+    }
 }

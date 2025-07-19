@@ -9,7 +9,7 @@
         "fakerphp/faker": "^1.23",
         "felixkpt/nestedroutes": "dev-main",
         "guzzlehttp/guzzle": "^7.2",
-        "laravel/framework": "^10.10",
+        "laravel/framework": "^10.0",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
         "spatie/laravel-google-cloud-storage": "^2.3",

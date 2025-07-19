@@ -6,5 +6,6 @@ use Illuminate\Http\Request;
 
 interface TourDestinationValidationInterface
 {
-    public function store(Request $request): mixed;    
+    public function store(Request $request): mixed;
+    public function storeFromJson(Request $request): mixed;
 }
