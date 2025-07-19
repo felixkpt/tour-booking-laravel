@@ -20,14 +20,16 @@ use Illuminate\Support\Facades\Route;
 // Routes accessible to authenticated users (both admin and regular users)
 
 
+Route::prefix('destinations')->group(function () {
+    Route::get('/', [TourDestinationController::class, 'index']); // View all tour destinations
+    Route::get('/view/{id}', [TourDestinationController::class, 'show']); // View a specific destination
+});
+
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('tours')->group(function () {
         Route::get('/', [ToursController::class, 'index']); // View available tours
         Route::get('/view/{id}', [ToursController::class, 'show']); // View a specific tour
-
-        Route::get('/destinations', [TourDestinationController::class, 'index']); // View all tour destinations
-        Route::get('/destinations/{id}', [TourDestinationController::class, 'show']); // View a specific destination
 
         Route::get('/bookings', [TourBookingController::class, 'getSelf']); // View all bookings
         Route::post('/bookings', [TourBookingController::class, 'store']); // Book a tour
@@ -41,6 +43,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::get('/destinations', [TourDestinationController::class, 'index']); // list tour destination
         Route::post('/destinations', [TourDestinationController::class, 'store']); // Create a new tour destination
+        Route::post('/destinations/create-from-json', [TourDestinationController::class, 'storeFromJson']); // Create new tour destinations FromJson
         Route::put('/destinations/view/{id}', [TourDestinationController::class, 'update']); // Update a destination
         Route::patch('/destinations/view/{id}', [TourDestinationController::class, 'updateStatus']); // Updatestatus a tour ticket
         Route::delete('/destinations/{id}', [TourDestinationController::class, 'destroy']); // Delete a destination

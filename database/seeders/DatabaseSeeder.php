@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
             RolesAndPermissionsSeeder::class,
 
             UserSeeder::class,
-            TourDestinationSeeder::class,
+            // TourDestinationSeeder::class,
             TourSeeder::class,
             TourBookingSeeder::class,
             TourTicketSeeder::class,

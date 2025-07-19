@@ -24,4 +24,14 @@ class TourDestinationValidation implements TourDestinationValidationInterface
 
         return $validateData;
     }
+
+    public function storeFromJson(Request $request): mixed
+    {
+        $validateData = $request->validate(
+            [
+                'json' => 'required',
+            ]
+        );
+        return $validateData;
+    }
 }

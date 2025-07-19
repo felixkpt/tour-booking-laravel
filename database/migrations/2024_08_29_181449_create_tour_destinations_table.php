@@ -14,12 +14,22 @@ return new class extends Migration
         Schema::create('tour_destinations', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
-            $table->string('name')->unique();
-            $table->string('slug')->unique();
-            $table->text('description');
-            $table->string('featured_image')->nullable();
+            $table->text('name')->unique();
+            $table->text('slug')->unique();
+            $table->text('link')->nullable();
+            $table->text('location')->nullable();
+            $table->string('category')->nullable();
+            $table->text('short_content')->nullable();
+            $table->longText('content')->nullable();
+            $table->text('featured_image')->nullable();
+
+            $table->unsignedInteger('been_here')->default(0);
+            $table->unsignedInteger('wants_to_count')->default(0);
+            $table->unsignedInteger('added_to_list')->default(0);
+
             $table->foreignId('creator_id')->nullable()->constrained('users')->onDelete('set null');
             $table->unsignedBigInteger('status_id')->default(1);
+
             $table->timestamps();
         });
     }

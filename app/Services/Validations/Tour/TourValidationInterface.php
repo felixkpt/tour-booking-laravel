@@ -6,5 +6,5 @@ use Illuminate\Http\Request;
 
 interface TourValidationInterface
 {
-    public function store(Request $request): mixed;    
+    public function store(Request $request): mixed;
 }

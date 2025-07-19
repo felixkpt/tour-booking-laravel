@@ -11,10 +11,16 @@ class TourDestination extends Model
 
     // Fillable attributes for mass assignment
     protected $fillable = [
+        'link',
         'name',
+        'location',
         'slug',
-        'description',
+        'short_content',
+        'content',
         'featured_image',
+        'been_here',
+        'wants_to_count',
+        'added_to_list',
         'creator_id',
         'status_id',
     ];
@@ -40,5 +46,20 @@ class TourDestination extends Model
     public function tours()
     {
         return $this->hasMany(Tour::class);
+    }
+
+    // Accessor to modify the image_path when accessed
+    public function getFeaturedImageAttribute($value)
+    {
+        if (empty($value)) {
+            return null;
+        }
+
+        // Check if the path already starts with http:// or https://
+        if (!preg_match('/^https?:\/\//', $value)) {
+            return 'http://localhost:8000/assets/' . ltrim($value, '/');
+        }
+
+        return $value;
     }
 }
